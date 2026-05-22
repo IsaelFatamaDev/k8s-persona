@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: isaelfatama-api-deployment
+  namespace: isaelfatama-api-ns
+  labels:
+    app: isaelfatama-api
+
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: isaelfatama-api
+  template:
+    metadata:
+      labels:
+        app: isaelfatama-api
+    spec:
+      containers:
+        - name: isaelfatama-api
+          image: isaelfatamadev/isaelfatama-api:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8085
+          env:
+            - name: APP_ENV
+              valueFrom:
+                configMapKeyRef:
+                  key: APP_ENV
+                  name: isaelfatama-api-config
+            - name: APP_VERSION
+              valueFrom:
+                configMapKeyRef:
+                  key: APP_VERSION
+                  name: isaelfatama-api-config
+            - name: APP_PORT
+              valueFrom:
+                configMapKeyRef:
+                  key: APP_PORT
+                  name: isaelfatama-api-config
+
+            - name: SECRET_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  key: username
+                  name: isaelfatama-api-secret
+            - name: SECRET_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: password
+                  name: isaelfatama-api-secret
+
